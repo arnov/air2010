@@ -16,53 +16,37 @@ def main():
     wordOrderList = []
     # Initialize the numerical array with zeros, rows is equal to the length of the dataset
     # number of columns is equal to the lenghth of the vocabulary + some extra for labels 
-    numericalArray = [[0]*10632 for i in range(2297)]
+    numericalArray = [[0]*14632 for i in range(2297)]
     labels = [[0]*2297]
 
 
   
     lineno = 0
     for line in data:
-        if lineno < 200:
-
-            temp_list = []
+        if lineno < 2297:
 
             lineList = line.split('\t')
 
             # Separate the sentence by spaces and add all words to the vocabulary
-            sentence = lineList[3].split()        
+            sentence = lineList[3].split()
             #print lineList[0]+"  "+lineList[1]+"    "+lineList[2]+"   "+lineList[3]
 
             # USEFUL FOR TESTS
-            for i, word in enumerate(sentence):
-                print sentence[i] 
+            #for i, word in enumerate(sentence):
+                #print sentence[i]
 
             sentence = parse_url(sentence)
 
-            # Remove strange symbols at the beggining and at the end of the terms
-            for i in range(len(sentence)):
-                sentence[i] = sentence[i].strip('.,:;&%()[]{}=+-*/\!|?~@#$\'')
-                sentence[i] = sentence[i].lower()
+            sentence = remove_strange_symbols(sentence)
 
-            # Remove the words with a lengh lower that 3
-            for i in range(len(sentence)):
-                if len(sentence[i]) < 3:
-                    temp_list.append(sentence[i])
+            sentence = remove_short_words(sentence,3)
 
-            for i in range (len(temp_list)):
-                sentence.remove(temp_list[i])
+            sentence = remove_stopwords(sentence, stopWordList)       
 
-
-        
-            # Delete all the occurences of stopWords in the sentence
-            for i, stopWord in enumerate(stopWordList):
-                if sentence.count(stopWord) > 0:                    
-                    for i in range(sentence.count(stopWord)):
-                        sentence.remove(stopWord)
 
             # USEFUL FOR TESTS
-            for i, word in enumerate(sentence):
-                print sentence[i] 
+            #for i, word in enumerate(sentence):
+                #print sentence[i] 
 
 
 
