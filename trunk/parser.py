@@ -2,8 +2,8 @@ def main():
     # Open the datafile
     data = open('../data/data_Weps3_Task2_Trial.txt', 'r')
     # Create file to save the output
-    train_data = open('../matlab_data/train_data_tf.csv', 'w')
-    test_data = open('../matlab_data/test_data_tf.csv', 'w')
+    train_data = open('../matlab_data        rain_data_tf.csv', 'w')
+    test_data = open('../matlab_data        est_data_tf.csv', 'w')
     #train_labels = open('../matlab_data/train_labels.csv', 'w')
     #test_labels = open('../matlab_data/test_labels.csv', 'w')
     
@@ -37,28 +37,28 @@ def main():
 
             # Remove strange symbols at the beggining and at the end of the terms
             for i in range(len(sentence)):
-		sentence[i] = sentence[i].strip('.,:;&%()[]{}=+-*/\!|?~@#$\'')
-		sentence[i] = sentence[i].lower()
+                sentence[i] = sentence[i].strip('.,:;&%()[]{}=+-*/\!|?~@#$\'')
+                sentence[i] = sentence[i].lower()
 
-	    # Remove the words with a lengh lower that 3
-	    for i in range(len(sentence)):
-		if len(sentence[i]) < 3:
-			temp_list.append(sentence[i])
+            # Remove the words with a lengh lower that 3
+            for i in range(len(sentence)):
+                if len(sentence[i]) < 3:
+                    temp_list.append(sentence[i])
 
             for i in range (len(temp_list)):
-		sentence.remove(temp_list[i])
+                sentence.remove(temp_list[i])
 
-	    # USEFUL FOR TESTS
+            # USEFUL FOR TESTS
             for i, word in enumerate(sentence):
                 print sentence 
-	
+        
             # Delete all the occurences of stopWords in the sentence
             for i, stopWord in enumerate(stopWordList):
                 if sentence.count(stopWord) > 0:                    
                     for i in range(sentence.count(stopWord)):
                         sentence.remove(stopWord)
 
-	# USEFUL FOR TESTS
+        # USEFUL FOR TESTS
             for i, word in enumerate(sentence):
                 print sentence 
 
@@ -82,10 +82,10 @@ def main():
 
             if lineList[4].strip('\n') == 'TRUE':
                 #numericalArray[lineno][0] = 1
-		labels.append(1)
+                labels.append(1)
             else:
                 #numericalArray[lineno][0] = 0
-		labels.append(-1)
+                labels.append(-1)
                 
         lineno += 1   
 
@@ -96,19 +96,19 @@ def main():
     # Print all the numerical data to the file (Beware file gets about 100 MB!)
     for i in range(len(numericalArray)):
   
-		if (i % 4) == 0:
-        		test_data.write(str(numericalArray[i]).strip('[]'))
-		        test_data.write('\n')
-			#test_labels.write(str(labels[i]).strip('[]'))
-			#test_labels.write('\n')
-		else:
-        		train_data.write(str(numericalArray[i]).strip('[]'))
-		        train_data.write('\n')
-			#train_labels.write(str(labels[i]).strip('[]'))
-			#train_labels.write('\n')
+                if (i % 4) == 0:
+                        test_data.write(str(numericalArray[i]).strip('[]'))
+                        test_data.write('\n')
+                        #test_labels.write(str(labels[i]).strip('[]'))
+                        #test_labels.write('\n')
+                else:
+                        train_data.write(str(numericalArray[i]).strip('[]'))
+                        train_data.write('\n')
+                        #train_labels.write(str(labels[i]).strip('[]'))
+                        #train_labels.write('\n')
 
-		
-	#labelsMatlab.write(labels[lineno])
+                
+        #labelsMatlab.write(labels[lineno])
         #dataMatlab.write('\n')
         
 if __name__ == "__main__":    
