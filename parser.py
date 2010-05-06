@@ -2,8 +2,8 @@ from functions import *
 
 def main():
     # Open the datafile
-    data = open('../data/data_Weps3_Task2_Trial.txt', 'r')    
-    
+    #data = open('stemmed_data.txt', 'r')    
+    data = open('../data/data_Weps3_Task2_Trial.txt','r')
     
     # Prototype of the stopword list
     stopWordList =["the","and","was","were","will","also","for","all","with","other","que","has","con","sin","soy","estoy","ser",""]
@@ -17,7 +17,7 @@ def main():
     # Initialize the numerical array with zeros, rows is equal to the length of the dataset
     # number of columns is equal to the lenghth of the vocabulary + some extra for labels 
     numericalArray = [[0]*14632 for i in range(2297)]
-    labels = [[0]*2297]
+    labels = []
 
 
   
@@ -26,7 +26,7 @@ def main():
         if lineno < 2297:
 
             lineList = line.split('\t')
-
+                        
             # Separate the sentence by spaces and add all words to the vocabulary
             sentence = lineList[3].split()
             #print lineList[0]+"  "+lineList[1]+"    "+lineList[2]+"   "+lineList[3]
@@ -42,7 +42,6 @@ def main():
             sentence = remove_short_words(sentence,3)
 
             sentence = remove_stopwords(sentence, stopWordList)       
-
 
             # USEFUL FOR TESTS
             #for i, word in enumerate(sentence):
@@ -79,7 +78,7 @@ def main():
     print len(vocabulary)
     print len(wordOrderList)
     
-    #print_to_file(numericalArray)
+    print_to_file(numericalArray,labels)
         
 if __name__ == "__main__":    
     main()
