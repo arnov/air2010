@@ -1,9 +1,9 @@
-def print_to_file(numericalArray):
+def print_to_file(numericalArray, labels):
     # Create file to save the output
     train_data = open('../matlab_data/train_data_tf.csv', 'w')    
-    #train_labels = open('../matlab_data/train_labels.csv', 'w')
+    train_labels = open('../matlab_data/train_labels.csv', 'w')
     test_data = open('../matlab_data/test_data_tf.csv', 'w')
-    #test_labels = open('../matlab_data/test_labels.csv', 'w')
+    test_labels = open('../matlab_data/test_labels.csv', 'w')
     
     # Print all the numerical data to the file (Beware file gets about 100 MB!)
     for i in range(len(numericalArray)):
@@ -11,13 +11,13 @@ def print_to_file(numericalArray):
                 if (i % 4) == 0:
                         test_data.write(str(numericalArray[i]).strip('[]'))
                         test_data.write('\n')
-                        #test_labels.write(str(labels[i]).strip('[]'))
-                        #test_labels.write('\n')
+                        test_labels.write(str(labels[i]).strip('[]'))
+                        test_labels.write('\n')
                 else:
                         train_data.write(str(numericalArray[i]).strip('[]'))
                         train_data.write('\n')
-                        #train_labels.write(str(labels[i]).strip('[]'))
-                        #train_labels.write('\n')
+                        train_labels.write(str(labels[i]).strip('[]'))
+                        train_labels.write('\n')
 
                 
         #labelsMatlab.write(labels[lineno])
