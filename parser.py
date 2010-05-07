@@ -1,9 +1,20 @@
-from functions import * 
+from functions import *
+import sys 
 
-def main():
+""" To use all stemming and word reducing function call as:
+ python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"
+ To skip a function just use a different string e.g.:
+ python parser.py "-" "remove_stopword" "remove_short" "stem_url" "remove_symbols"
+ will use the non stemmed data, but does call the other function, remove_stopword etc. """
+
+def main(stem, stopword,short,url,symbols):
+    print_settings(stem, stopword,short,url,symbols)
+        
     # Open the datafile
-    #data = open('stemmed_data.txt', 'r')    
-    data = open('../data/data_Weps3_Task2_Trial.txt','r')
+    if(stem == "stem"):
+        data = open('stemmed_data.txt', 'r')    
+    else:
+        data = open('../data/data_Weps3_Task2_Trial.txt','r')
     
     # Prototype of the stopword list
     stopWordList =["the","and","was","were","will","also","for","all","with","other","que","has","con","sin","soy","estoy","ser",""]
@@ -35,13 +46,17 @@ def main():
             #for i, word in enumerate(sentence):
                 #print sentence[i]
 
-            sentence = parse_url(sentence)
+            if(url == "stem_url"):
+                sentence = parse_url(sentence)
 
-            sentence = remove_strange_symbols(sentence)
+            if(symbols == "remove_symbols")    :
+                sentence = remove_strange_symbols(sentence)
 
-            sentence = remove_short_words(sentence,3)
+            if(short == "remove_short"):
+                sentence = remove_short_words(sentence,3)
 
-            sentence = remove_stopwords(sentence, stopWordList)       
+            if(stopword == "remove_stopword"):
+                sentence = remove_stopwords(sentence, stopWordList)       
 
             # USEFUL FOR TESTS
             #for i, word in enumerate(sentence):
@@ -74,11 +89,11 @@ def main():
                 
         lineno += 1   
 
-
+    print "\nVocabulary length: "
     print len(vocabulary)
     print len(wordOrderList)
     
-    print_to_file(numericalArray,labels)
+    #print_to_file(numericalArray,labels)
         
 if __name__ == "__main__":    
-    main()
+    main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])

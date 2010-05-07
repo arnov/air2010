@@ -5,7 +5,7 @@ def print_to_file(numericalArray, labels):
     test_data = open('../matlab_data/test_data_tf.csv', 'w')
     test_labels = open('../matlab_data/test_labels.csv', 'w')
     
-    # Print all the numerical data to the file (Beware file gets about 100 MB!)
+    # Print all the numerical data to the file
     for i in range(len(numericalArray)):
   
                 if (i % 4) == 0:
@@ -71,3 +71,26 @@ def remove_stopwords(sentence, stopWordList):
             for i in range(sentence.count(stopWord)):
                 sentence.remove(stopWord)
     return sentence
+    
+def print_settings(stem, stopword,short,url,symbols):
+    print "Using the following settings: \n"
+    if(stem == "stem"):
+        print "-Using the stemmed data"
+    else:
+        print "-Using the non-stemmed data"
+    if(stopword == "remove_stopword"):
+        print "-Stopwords are ignored"
+    else:
+        print "-Stopwords are not ignored"
+    if(short == "remove_short"):
+        print "-Short words ( < 3 chars ) are ignored"
+    else:
+        print "-Short words are not ignored"
+    if(url == "stem_url"):
+        print "-URLs are reduced to domain"
+    else:
+        print "-URLs are used as they are in the data"
+    if(symbols == "remove_symbols"):
+        print "-Symbols ( @$%@#!$ )are removed"
+    else:
+        print "-Symbols are not removed"
