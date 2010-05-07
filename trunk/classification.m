@@ -6,10 +6,11 @@ system(sprintf('python parser.py "stem" "remove_stopword" "remove_short" "stem_u
 
 %%
 addpath ..\Source\Libsvm\
+addpath ..\Source\KNN\
 addpath ..\Source
-
-fprintf('\n                LOADING DATA\n')
 %%
+fprintf('\n                LOADING DATA\n')
+
 load('../matlab_data/train_data_tf.csv')
 load('../matlab_data/test_data_tf.csv')
 load('../matlab_data/train_labels.csv')
@@ -19,7 +20,11 @@ load('../matlab_data/test_labels.csv')
 % Here we can select with type of weighting we want use:
 % 1 = tf
 % 2 = tf-idf
-WEIGHTING=1;
+WEIGHTING=2;
+% Here we can select with type of classifier we want use:
+% 1 = knn
+% 2 = svn
+CLASSIFIER=2;
 
 
 fprintf('\n                WEIGHTING\n')
@@ -86,17 +91,24 @@ end % end general w if
 %%
 
 fprintf('\n                CLASSIFING\n')
-% CLASSIFICATION WITH LIBSVM
+
+if CLASSIFIER==1
+    % CLASSIFICATION WITH KNN
+    predict_label = cvKnn(test_data', train_data', train_labels',2);
+
+else if CLASSIFIER==2
     
-cc=100;
-options=sprintf('-t 0 -w1 10 -w2 1 -c %f',cc);
-model=svmtrain(train_labels,train_data,options);
+    % CLASSIFICATION WITH LIBSVM
+    cc=100;
+    options=sprintf('-t 0 -w1 10 -w2 1 -c %f',cc);
+    model=svmtrain(train_labels,train_data,options);
 
+    [predict_label, accuracy , dec_values] = svmpredict(test_labels,test_data, model); 
+    end
+end
 
-[predict_label, accuracy , dec_values] = svmpredict(test_labels,test_data, model); 
-
-pos=sum(predict_label(test_labels==1)==1)/sum(test_labels==1)
- 
+% Computer the percentage of correct positive and negative classification
+pos=sum(predict_label(test_labels==1)==1)/sum(test_labels==1) 
 neg=sum(predict_label(test_labels==-1)==-1)/sum(test_labels==-1)
 
 
