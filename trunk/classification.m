@@ -1,12 +1,17 @@
-addpath /home/davide/Desktop/project/classifiers/Libsvm/
-addpath /home/davide/Desktop/project/code/
+% Run python script
+[s, Python_output] = dos('C:\Python26\python.exe parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"')
+
+
+%%
+%addpath /home/davide/Desktop/project/classifiers/Libsvm/
+%addpath /home/davide/Desktop/project/code/
 
 fprintf('\n                LOADING DATA\n')
 
-load('/home/davide/Desktop/project/matlab_data/train_data_tf.csv')
-load('/home/davide/Desktop/project/matlab_data/test_data_tf.csv')
-load('/home/davide/Desktop/project/matlab_data/train_labels.csv')
-load('/home/davide/Desktop/project/matlab_data/test_labels.csv')
+load('../matlab_data/train_data_tf.csv')
+load('../matlab_data/test_data_tf.csv')
+load('../matlab_data/train_labels.csv')
+load('../matlab_data/test_labels.csv')
 
 
 % Here we can select with type of weighting we want use:
