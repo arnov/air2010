@@ -70,13 +70,18 @@ def main(stem, stopword,short,url,symbols):
                     vocabulary[word] += 1  
                     wordOrderList.index(word)
                 except:
-                    vocabulary[word] = 1
-                    wordOrderList.append(word)
+                    # Don't use the word if it's going to be in the test data
+                    if(lineno % 4) != 0:
+                        vocabulary[word] = 1
+                        wordOrderList.append(word)                  
          
             
             #Fill the numerical array with values
             for word in sentence:
-                numericalArray[lineno][wordOrderList.index(word)] = sentence.count(word)
+                try:
+                    numericalArray[lineno][wordOrderList.index(word)] = sentence.count(word)
+                except:
+                    continue
 
             if lineList[4].strip('\n') == 'TRUE':
                 #numericalArray[lineno][0] = 1
@@ -91,8 +96,11 @@ def main(stem, stopword,short,url,symbols):
     print len(vocabulary)
     print len(wordOrderList)
     
-    #print_to_file(numericalArray,labels)
-    print "\nThe matlab_data files are not updated!\n"
+    for i in range (len(numericalArray)):
+        del numericalArray[i][len(vocabulary):14632]
+    
+    print_to_file(numericalArray,labels)
+    #print "\nThe matlab_data files are not updated!\n"
         
 if __name__ == "__main__":    
     main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
