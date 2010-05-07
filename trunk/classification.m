@@ -1,23 +1,25 @@
-% Run python script
-[s, Python_output] = dos('C:\Python26\python.exe parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"')
-
+% Run python script in windows
+[s,Python_output] = dos('C:\Python26\python.exe parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"')
+%%
+% Run python script in linux
+system(sprintf('python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"'))
 
 %%
-%addpath /home/davide/Desktop/project/classifiers/Libsvm/
-%addpath /home/davide/Desktop/project/code/
+addpath ..\Source\Libsvm\
+addpath ..\Source
 
 fprintf('\n                LOADING DATA\n')
-
+%%
 load('../matlab_data/train_data_tf.csv')
 load('../matlab_data/test_data_tf.csv')
 load('../matlab_data/train_labels.csv')
 load('../matlab_data/test_labels.csv')
 
-
+%%
 % Here we can select with type of weighting we want use:
 % 1 = tf
 % 2 = tf-idf
-WEIGHTING=2;
+WEIGHTING=1;
 
 
 fprintf('\n                WEIGHTING\n')
@@ -81,7 +83,7 @@ else if WEIGHTING==2
     end % end if w2
 end % end general w if
 
-
+%%
 
 fprintf('\n                CLASSIFING\n')
 % CLASSIFICATION WITH LIBSVM
@@ -97,6 +99,18 @@ pos=sum(predict_label(test_labels==1)==1)/sum(test_labels==1)
  
 neg=sum(predict_label(test_labels==-1)==-1)/sum(test_labels==-1)
 
+
+% RESULTS with stemmed data (beforehand), stemmed url, del short words, del
+% symbols # nr of terms in the voc: 8741
+% TF
+% Accuracy = 85.3913% (491/575) (classification)
+% pos = 0.7939
+% neg = 0.8934
+
+% TF-IDF 
+% Accuracy = 68.1739% (392/575) (classification)
+% pos = 0.7895
+% neg = 0.6110
 
 % RESULTS:
 % # of terms in the voc: 14374
