@@ -14,7 +14,7 @@ def main(stem, stopword,short,url,symbols):
     if(stem == "stem"):
         data = open('stemmed_data.txt', 'r')    
     else:
-        data = open('../data/data_Weps3_Task2_Trial.txt','r')
+        data = open('data_Weps3_Task2_Trial.txt','r') 
     
     # Prototype of the stopword list
     stopWordList =["the","and","was","were","will","also","for","all","with","other","que","has","con","sin","soy","estoy","ser",""]
@@ -60,9 +60,7 @@ def main(stem, stopword,short,url,symbols):
 
             # USEFUL FOR TESTS
             #for i, word in enumerate(sentence):
-                #print sentence[i] 
-
-
+                #print sentence[i]             
 
             # For every word add it to the vocabulary if it's not in there yet with document
             # frequency 1. If it is already in the and it's the first time in this document
@@ -94,6 +92,7 @@ def main(stem, stopword,short,url,symbols):
     print len(wordOrderList)
     
     #print_to_file(numericalArray,labels)
+    print "\nThe matlab_data files are not updated!\n"
         
 if __name__ == "__main__":    
     main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
