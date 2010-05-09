@@ -90,7 +90,7 @@ def main(stem, stopword,short,url,symbols):
                 #numericalArray[lineno][0] = 0
                 labels.append(-1)
                 
-        lineno += 1   
+            lineno += 1   
 
     print "\nVocabulary length: "
     print len(vocabulary)
