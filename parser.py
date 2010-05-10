@@ -1,5 +1,6 @@
 from functions import *
 import sys 
+import pickle
 
 """ To use all stemming and word reducing function call as:
  python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"
@@ -14,30 +15,33 @@ def main(stem, stopword,short,url,symbols):
     if(stem == "stem"):
         data = open('stemmed_data.txt', 'r')    
     else:
-        data = open('data_Weps3_Task2_Trial.txt','r') 
+        data = open('data_Weps3_Task2_Trial.txt','r')
+
+    nrOfLines = len(data.readlines())
+    # Go back to the first line
+    data.seek(0)
     
     # Prototype of the stopword list
     stopWordList =["the","and","was","were","will","also","for","all","with","other","que","has","con","sin","soy","estoy","ser",""]
     
-    # Initialize the vocabulary as an empty dictionary it maps between words and the number of
-    # documents they occur in.
-    vocabulary = {}
-    # The wordOrderList is used to get the correct index for when we need to add a value to
-    # the numericalArray
-    wordOrderList = []
+    # Initialize the vocabulary as an empty list
+    vocabulary = []
+    #
+    voc = open('voc.pickle','wb')
     # Initialize the numerical array with zeros, rows is equal to the length of the dataset
     # number of columns is equal to the lenghth of the vocabulary + some extra for labels 
-    numericalArray = [[0]*14632 for i in range(2297)]
+    numericalArray = [[0]*14632 for i in range(nrOfLines)]
     labels = []
 
 
   
     lineno = 0
+   
     for line in data:
-        if lineno < 2297:
+        if(lineno < nrOfLines):
 
-            lineList = line.split('\t')
-                        
+            lineList = line.split('\t')           
+
             # Separate the sentence by spaces and add all words to the vocabulary
             sentence = lineList[3].split()
             #print lineList[0]+"  "+lineList[1]+"    "+lineList[2]+"   "+lineList[3]
@@ -67,19 +71,17 @@ def main(stem, stopword,short,url,symbols):
             # it is encountered, add the document frequency
             for word in sentence:
                 try:
-                    vocabulary[word] += 1  
-                    wordOrderList.index(word)
+                    vocabulary.index(word)
                 except:
                     # Don't use the word if it's going to be in the test data
                     if(lineno % 4) != 0:
-                        vocabulary[word] = 1
-                        wordOrderList.append(word)                  
+                        vocabulary.append(word)                  
          
             
             #Fill the numerical array with values
             for word in sentence:
                 try:
-                    numericalArray[lineno][wordOrderList.index(word)] = sentence.count(word)
+                    numericalArray[lineno][vocabulary.index(word)] = sentence.count(word)
                 except:
                     continue
 
@@ -94,13 +96,17 @@ def main(stem, stopword,short,url,symbols):
 
     print "\nVocabulary length: "
     print len(vocabulary)
-    print len(wordOrderList)
     
     for i in range (len(numericalArray)):
         del numericalArray[i][len(vocabulary):14632]
+        
+    # Save vocabulary to file
+    pickle.dump(vocabulary, voc)
+    voc.close()
+
     
-    print_to_file(numericalArray,labels)
-    #print "\nThe matlab_data files are not updated!\n"
+    #print_to_file(numericalArray,labels)
+    print "\nThe matlab_data files are not updated!\n"
         
 if __name__ == "__main__":    
     main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
