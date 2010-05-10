@@ -8,16 +8,16 @@ def print_to_file(numericalArray, labels):
     # Print all the numerical data to the file
     for i in range(len(numericalArray)):
   
-                if (i % 4) == 0:
-                        test_data.write(str(numericalArray[i]).strip('[]'))
-                        test_data.write('\n')
-                        test_labels.write(str(labels[i]).strip('[]'))
-                        test_labels.write('\n')
-                else:
-                        train_data.write(str(numericalArray[i]).strip('[]'))
-                        train_data.write('\n')
-                        train_labels.write(str(labels[i]).strip('[]'))
-                        train_labels.write('\n')
+        if (i % 4) == 0:
+            test_data.write(str(numericalArray[i]).strip('[]'))
+            test_data.write('\n')
+            test_labels.write(str(labels[i]).strip('[]'))
+            test_labels.write('\n')
+        else:
+            train_data.write(str(numericalArray[i]).strip('[]'))
+            train_data.write('\n')
+            train_labels.write(str(labels[i]).strip('[]'))
+            train_labels.write('\n')
 
                 
         #labelsMatlab.write(labels[lineno])

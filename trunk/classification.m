@@ -5,9 +5,9 @@
 system(sprintf('python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"'))
 
 %%
-addpath ..\Source\Libsvm\
-addpath ..\Source\KNN\
-addpath ..\Source
+addpath ..\code\Libsvm\
+addpath ..\code\KNN\
+addpath ..\code
 %%
 fprintf('\n                LOADING DATA\n')
 
@@ -20,7 +20,7 @@ load('../matlab_data/test_labels.csv')
 % Here we can select with type of weighting we want use:
 % 1 = tf
 % 2 = tf-idf
-WEIGHTING=2;
+WEIGHTING=1;
 % Here we can select with type of classifier we want use:
 % 1 = knn
 % 2 = svn
