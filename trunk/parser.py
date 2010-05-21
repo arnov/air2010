@@ -12,10 +12,7 @@ def main(stem, stopword,short,url,symbols):
     print_settings(stem, stopword,short,url,symbols)
         
     # Open the datafile
-    if(stem == "stem"):
-        data = open('stemmed_data.txt', 'r')    
-    else:
-        data = open('data_Weps3_Task2_Trial.txt','r')
+    data = open('data_Weps3_Task2_Trial.txt','r')
 
     nrOfLines = len(data.readlines())
     # Go back to the first line
@@ -53,15 +50,19 @@ def main(stem, stopword,short,url,symbols):
             if(url == "stem_url"):
                 sentence = parse_url(sentence)
 
-            if(symbols == "remove_symbols")    :
+            if(symbols == "remove_symbols"):
                 sentence = remove_strange_symbols(sentence)
 
             if(short == "remove_short"):
                 sentence = remove_short_words(sentence,3)
 
             if(stopword == "remove_stopword"):
-                sentence = remove_stopwords(sentence, stopWordList)       
+                sentence = remove_stopwords(sentence, stopWordList)  
 
+            if(stem == "stem"):                
+                sentence = stem_word(sentence)
+
+            print sentence    
             # USEFUL FOR TESTS
             #for i, word in enumerate(sentence):
                 #print sentence[i]             

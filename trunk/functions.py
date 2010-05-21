@@ -1,3 +1,5 @@
+from stemmer import PorterStemmer
+
 def print_to_file(numericalArray, labels):
     # Create file to save the output
     train_data = open('../matlab_data/train_data_tf.csv', 'w')    
@@ -22,6 +24,14 @@ def print_to_file(numericalArray, labels):
                 
         #labelsMatlab.write(labels[lineno])
         #dataMatlab.write('\n')
+        
+def stem_word(sentence):
+    for i in range(len(sentence)):
+        p = PorterStemmer()
+        sentence[i] = sentence[i].lower()
+        sentence[i] = p.stem(sentence[i], 0,len(sentence[i])-1)        
+    return sentence
+
 
 def parse_url(sentence):
     wordsToAdd = []
