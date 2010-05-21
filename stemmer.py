@@ -352,7 +352,9 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         for f in sys.argv[1:]:
             infile = open(f, 'r')
-            while 1:
+            x = 0
+            while x < 6:
+                x += 1
                 output = ''
                 word = ''
                 line = infile.readline()
@@ -361,8 +363,13 @@ if __name__ == '__main__':
                 for c in line:
                     if c.isalpha():
                         word += c.lower()
+                        print "-"
+                        print c
+                        print "IF THIS HAPPENS"
                     else:
                         if word:
+                            print "THIS SHOULDNT HAPPEN"
+                            print "--"
                             output += p.stem(word, 0,len(word)-1)
                             word = ''
                         output += c.lower()
