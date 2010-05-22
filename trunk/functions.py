@@ -2,10 +2,10 @@ from stemmer import PorterStemmer
 
 def print_to_file(numericalArray, labels):
     # Create file to save the output
-    train_data = open('../matlab_data/train_data_tf.csv', 'w')    
-    train_labels = open('../matlab_data/train_labels.csv', 'w')
-    test_data = open('../matlab_data/test_data_tf.csv', 'w')
-    test_labels = open('../matlab_data/test_labels.csv', 'w')
+    train_data = open('matlab_data/train_data_tf.csv', 'w')    
+    train_labels = open('matlab_data/train_labels.csv', 'w')
+    test_data = open('matlab_data/test_data_tf.csv', 'w')
+    test_labels = open('matlab_data/test_labels.csv', 'w')
     
     # Print all the numerical data to the file
     for i in range(len(numericalArray)):

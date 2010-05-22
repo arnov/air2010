@@ -1,13 +1,8 @@
-from functions import *
 import sys 
+from functions import *
 import pickle
 
-""" To use all stemming and word reducing function call as:
- python parser.py or, pass all settings explicitely:
- python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"
- To skip a function just use a different string e.g.:
- python parser.py "-" "remove_stopword" "remove_short" "stem_url" "remove_symbols"
- will use the non stemmed data, but does call the other function, remove_stopword etc. """
+
 
 def main(stem, stopword,short,url,symbols):
     print_settings(stem, stopword,short,url,symbols)
@@ -31,6 +26,17 @@ def main(stem, stopword,short,url,symbols):
     numericalArray = [[0]*14632 for i in range(nrOfLines)]
     labels = []
 
+    # Variables needed for Naive Bayes
+    NrOfTrue = 0.0
+    NrOfFalse = 0.0
+    
+    NrOfWordsTrue = 0.0
+    NrOfWordsFalse = 0.0
+    
+    # Two language models, maps a word to a count for a class
+    CountInTrue = {}
+    CountInFalse = {}
+        
 
   
     lineno = 0
@@ -62,7 +68,7 @@ def main(stem, stopword,short,url,symbols):
 
             if(stem == "stem"):                
                 sentence = stem_word(sentence)
-  
+
             # USEFUL FOR TESTS
             #for i, word in enumerate(sentence):
                 #print sentence[i]             
@@ -72,10 +78,18 @@ def main(stem, stopword,short,url,symbols):
             # it is encountered, add the document frequency
             for word in sentence:
                 try:
+                    if lineList[4].strip('\n') == 'TRUE':
+                        CountInTrue[word] += 1
+                    else:
+                        CountInFalse[word] += 1
                     vocabulary.index(word)
                 except:
                     # Don't use the word if it's going to be in the test data
                     if(lineno % 4) != 0:
+                        if lineList[4].strip('\n') == 'TRUE':
+                            CountInTrue[word] = 1
+                        else:
+                            CountInFalse[word] = 1
                         vocabulary.append(word)                  
          
             
@@ -89,14 +103,28 @@ def main(stem, stopword,short,url,symbols):
             if lineList[4].strip('\n') == 'TRUE':
                 #numericalArray[lineno][0] = 1
                 labels.append(1)
+                # Update naive bayes statistics for train set only
+                if(lineno % 4) != 0:
+                    NrOfWordsTrue += len(sentence)
+                    NrOfTrue += 1
             else:
                 #numericalArray[lineno][0] = 0
                 labels.append(-1)
-                
+                NrOfFalse += 1
+                if(lineno % 4) != 0:
+                    NrOfWordsFalse += len(sentence)
+                    NrOfFalse += 1    
+            
             lineno += 1   
 
     print "\nVocabulary length: "
     print len(vocabulary)
+    
+    print "\np(T) = "
+    print NrOfTrue/(NrOfTrue+NrOfFalse)
+    
+    print "\np(comput|True) = "
+    print CountInTrue['comput']/NrOfWordsTrue
     
     for i in range (len(numericalArray)):
         del numericalArray[i][len(vocabulary):14632]
@@ -106,9 +134,54 @@ def main(stem, stopword,short,url,symbols):
     voc.close()
 
     
-    print_to_file(numericalArray,labels)
-    #print "\nThe matlab_data files are not updated!\n"
-        
+    #print_to_file(numericalArray,labels)
+    print "\nThe matlab_data files are not updated!\n"
+
+    # Calculate probabilities for test example
+    data.seek(0)
+    lineno = 0
+    nrOfTest = 0
+    NrOfErrors = 0.0
+    for line in data:
+        if(lineno < nrOfLines and (lineno % 4) == 0):
+            lineList = line.split('\t')                       
+            sentence = lineList[3].split()
+            
+            pTrue = 1.0
+            pFalse = 1.0
+            
+            for word in sentence:
+                # Ugly hack, need smoothing, if the word is never seen just multiply by 1
+                try:                    
+                    pTrue *= CountInTrue[word]/NrOfWordsTrue
+                    pFalse *= CountInFalse[word]/NrOfWordsFalse
+                except:
+                    pTrue *= 1
+                    pFalse *= 1
+            
+            pTrue *= NrOfTrue/(NrOfTrue+NrOfFalse)
+            pFalse *= NrOfFalse/(NrOfTrue+NrOfFalse)
+            
+                        
+            if(pTrue > pFalse):
+                if(lineList[4].strip('\n') != 'TRUE'):
+                    print NrOfErrors
+                    print "ERROR PREDICTED TRUE"
+                    print line
+            else:
+                if(lineList[4].strip('\n') != 'FALSE'):
+                    NrOfErrors += 1
+                    print "ERROR PREDICTED FALSE"
+                    print line
+            nrOfTest += 1
+        lineno += 1
+    
+    print NrOfErrors
+    print "-"
+    print nrOfTest  
+    print "Accuracy"
+    print 1-NrOfErrors/nrOfTest
+
 if __name__ == "__main__":   
     try:
         main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
