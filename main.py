@@ -7,9 +7,9 @@ def main(stem, stopword,short,url,symbols):
     print_settings(stem, stopword,short,url,symbols)
     
     # Open the datafile
-    train_loc = 'train.txt'
+    train_loc = 'data/train.txt'
     # Open the datafile
-    test_loc = 'test.txt'
+    test_loc = 'data/test.txt'
     
     number_dataset = 2
     

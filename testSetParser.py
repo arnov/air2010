@@ -15,11 +15,8 @@ def voc_test(test_loc, test_data_loc, test_labels_loc, stem, stopword,short, url
 
     nrOfLines = len(data.readlines())
     # Go back to the first line
-    data.seek(0)
-    
-    # Prototype of the stopword list
-    stopWordList =["the","and","was","were","will","also","for","all","with","other","que","has","con","sin","soy","estoy","ser",""]
-    
+    data.seek(0)    
+  
     # Read the vocabulary from file
     voc = open('voc.pickle','rb')
     vocabulary = pickle.load(voc)
@@ -52,7 +49,7 @@ def voc_test(test_loc, test_data_loc, test_labels_loc, stem, stopword,short, url
                 sentence = remove_short_words(sentence,2)
 
             if(stopword == "remove_stopword"):
-                sentence = remove_stopwords(sentence, stopWordList)  
+                sentence = remove_stopwords(sentence)  
 
             if(stem == "stem"):                
                 sentence = stem_word(sentence)     

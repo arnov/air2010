@@ -8,17 +8,13 @@ def main(stem, stopword,short,url,symbols):
     print_settings(stem, stopword,short,url,symbols)
         
     # Open the datafiles
-    train = open('train.txt','r')
-    test = open('test.txt','r')
+    train = open('data/train.txt','r')
+    test = open('data/test.txt','r')
 
     nrOfLines = len(train.readlines())
     # Go back to the first line
-    train.seek(0)
-    
-    # Prototype of the stopword list
-    stopWordList =["the","and","was","were","will","also","for","all","with","other","que","has","con","sin","soy","estoy","ser",""]
-    
-
+    train.seek(0)    
+   
     # Variables needed for Naive Bayes
     NrOfTrue = 0.0
     NrOfFalse = 0.0
@@ -36,63 +32,70 @@ def main(stem, stopword,short,url,symbols):
    
     for line in train:
         if(lineno < nrOfLines):
+ 
+            lineList = line.split('\t')    
             
-            lineList = line.split('\t')      
+            # Ignore empty lines
+            if(len(lineList) > 2):
          
-            # Separate the sentence by spaces and add all words to the vocabulary
-            sentence = lineList[3].split()
-            #print lineList[0]+"  "+lineList[1]+"    "+lineList[2]+"   "+lineList[3]
+                # Separate the sentence by spaces and add all words to the vocabulary
+                sentence = lineList[3].split()
+                #print lineList[0]+"  "+lineList[1]+"    "+lineList[2]+"   "+lineList[3]
 
-            # USEFUL FOR TESTS
-            #for i, word in enumerate(sentence):
-                #print sentence[i]
+                # USEFUL FOR TESTS
+                #for i, word in enumerate(sentence):
+                    #print sentence[i]
 
-            if(url == "stem_url"):
-                sentence = parse_url(sentence)
+                if(url == "stem_url"):
+                    sentence = parse_url(sentence)
 
-            if(symbols == "remove_symbols"):
-                sentence = remove_strange_symbols(sentence)
+                if(symbols == "remove_symbols"):
+                    sentence = remove_strange_symbols(sentence)
 
-            if(short == "remove_short"):
-                sentence = remove_short_words(sentence,3)
+                if(short == "remove_short"):
+                    sentence = remove_short_words(sentence,3)
 
-            if(stopword == "remove_stopword"):
-                sentence = remove_stopwords(sentence, stopWordList)  
+                if(stopword == "remove_stopword"):
+                    sentence = remove_stopwords(sentence)  
 
-            if(stem == "stem"):                
-                sentence = stem_word(sentence)
+                if(stem == "stem"):                
+                    sentence = stem_word(sentence)
 
+                 
+
+                # For every word if it's in a positive example add it
+                # to the CountInTrue dict if it's false add it to the
+                # CountInFalse, if it's not yet seen create it in the dict
+                for word in sentence:
+                    try:
+                        if lineList[4].strip('\n') == 'TRUE':
+                            CountInTrue[word] += 1
+                        else:
+                            CountInFalse[word] += 1
+                    except:
+                        if lineList[4].strip('\n') == 'TRUE':
+                            CountInTrue[word] = 1
+                        else:
+                            CountInFalse[word] = 1
+              
              
+                
 
-            # For every word if it's in a positive example add it
-            # to the CountInTrue dict if it's false add it to the
-            # CountInFalse, if it's not yet seen create it in the dict
-            for word in sentence:
-                try:
-                    if lineList[4].strip('\n') == 'TRUE':
-                        CountInTrue[word] += 1
-                    else:
-                        CountInFalse[word] += 1
-                except:
-                    if lineList[4].strip('\n') == 'TRUE':
-                        CountInTrue[word] = 1
-                    else:
-                        CountInFalse[word] = 1
-          
-         
+
+                if lineList[4].strip('\n') == 'TRUE':
+                    NrOfWordsTrue += len(sentence)
+                    NrOfTrue += 1
+                else:
+                    NrOfFalse += 1
+                    NrOfWordsFalse += len(sentence)
+                    NrOfFalse += 1    
             
-
-
-            if lineList[4].strip('\n') == 'TRUE':
-                NrOfWordsTrue += len(sentence)
-                NrOfTrue += 1
-            else:
-                NrOfFalse += 1
-                NrOfWordsFalse += len(sentence)
-                NrOfFalse += 1    
-            
-            lineno += 1   
-    
+            lineno += 1
+            '''
+            if (lineno % 300) == 0:
+                print '%.0f %%' % (float(lineno)/nrOfLines*100)
+                print 
+            '''
 
 
     # Calculate probabilities for test example
@@ -157,11 +160,9 @@ def main(stem, stopword,short,url,symbols):
                 TrueNeg += 1
         NrOfTest += 1
         lineno += 1
-        #print "-->"
+
         
-    print NrOfErrors
-    print "-"
-    print NrOfTest  
+
     print "\nAccuracy"
     print 1-NrOfErrors/NrOfTest
     print "\nRecall"

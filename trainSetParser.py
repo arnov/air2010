@@ -13,7 +13,7 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
         
     # Open the datafile
     data = open(train_loc,'a+')
-    extra_tweets = open('extra_tweets.txt','r')
+    extra_tweets = open('data/extra_tweets.txt','r')
     
     for line in extra_tweets:
         data.write(line)
@@ -23,9 +23,6 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
     nrOfLines = len(data.readlines())
     # Go back to the first line
     data.seek(0)
-    
-    # Prototype of the stopword list
-    stopWordList =["the","and","was","were","will","also","for","all","with","other","que","has","con","sin","soy","estoy","ser",""]
     
     # Initialize the vocabulary as an empty list
     vocabulary = []
@@ -58,7 +55,7 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
                 sentence = remove_short_words(sentence,2)
 
             if(stopword == "remove_stopword"):
-                sentence = remove_stopwords(sentence, stopWordList)  
+                sentence = remove_stopwords(sentence)  
 
             if(stem == "stem"):                
                 sentence = stem_word(sentence)                         
