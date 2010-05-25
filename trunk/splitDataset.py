@@ -6,30 +6,25 @@ def split(testSet):
     # 3 -> 1,5,9 go in test
         
     # Open the datafile
-    data = open('data_Weps3_Task2_Trial.txt','r')
+    data = open('data/data_Weps3_Task2_Trial.txt','r')
 
-    dataset = open('dataset.txt', 'w')
+    tempset = open('data/dataset.txt', 'w')
     # Create file to save the train set
-    train = open('train.txt', 'w')
+    train = open('data/train.txt', 'w')
     # Create file to save the test set
-    test = open('test.txt', 'w')
+    test = open('data/test.txt', 'w')
  
     lineno = 0
     datasetList = []
    
+    # Skip all examples labelled 'UNKNOWN'
     for line in data:
         lineList = line.split('\t')           
         if(lineList[4].strip('\n') != 'UNKNOWN'):
-            dataset.write(line)
+            tempset.write(line)
             datasetList.append(line)
             lineno += 1 
-          
-    #for line in dataset:
-        #if((lineno+testSet) % 4) != 0:
-        #    train.write(line)		
-        #else:
-        #    test.write(line)	
-        #lineno += 1  
+
     
     for i in range(len(datasetList)):
         if((i+testSet) % 4) != 0:
@@ -37,4 +32,7 @@ def split(testSet):
         else:
             test.write(datasetList[i])
     train.write('\n')
+    
+if __name__ == "__main__":  
+    split(0)
 
