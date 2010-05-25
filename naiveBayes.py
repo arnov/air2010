@@ -7,24 +7,17 @@ import pickle
 def main(stem, stopword,short,url,symbols):
     print_settings(stem, stopword,short,url,symbols)
         
-    # Open the datafile
-    data = open('data_Weps3_Task2_Trial.txt','r')
+    # Open the datafiles
+    train = open('train.txt','r')
+    test = open('test.txt','r')
 
-    nrOfLines = len(data.readlines())
+    nrOfLines = len(train.readlines())
     # Go back to the first line
-    data.seek(0)
+    train.seek(0)
     
     # Prototype of the stopword list
     stopWordList =["the","and","was","were","will","also","for","all","with","other","que","has","con","sin","soy","estoy","ser",""]
     
-    # Initialize the vocabulary as an empty list
-    vocabulary = []
-    #
-    voc = open('voc.pickle','wb')
-    # Initialize the numerical array with zeros, rows is equal to the length of the dataset
-    # number of columns is equal to the lenghth of the vocabulary + some extra for labels 
-    numericalArray = [[0]*14632 for i in range(nrOfLines)]
-    labels = []
 
     # Variables needed for Naive Bayes
     NrOfTrue = 0.0
@@ -41,11 +34,11 @@ def main(stem, stopword,short,url,symbols):
   
     lineno = 0
    
-    for line in data:
+    for line in train:
         if(lineno < nrOfLines):
-
-            lineList = line.split('\t')           
-
+            
+            lineList = line.split('\t')      
+         
             # Separate the sentence by spaces and add all words to the vocabulary
             sentence = lineList[3].split()
             #print lineList[0]+"  "+lineList[1]+"    "+lineList[2]+"   "+lineList[3]
@@ -69,118 +62,115 @@ def main(stem, stopword,short,url,symbols):
             if(stem == "stem"):                
                 sentence = stem_word(sentence)
 
-            # USEFUL FOR TESTS
-            #for i, word in enumerate(sentence):
-                #print sentence[i]             
+             
 
-            # For every word add it to the vocabulary if it's not in there yet with document
-            # frequency 1. If it is already in the and it's the first time in this document
-            # it is encountered, add the document frequency
+            # For every word if it's in a positive example add it
+            # to the CountInTrue dict if it's false add it to the
+            # CountInFalse, if it's not yet seen create it in the dict
             for word in sentence:
                 try:
                     if lineList[4].strip('\n') == 'TRUE':
                         CountInTrue[word] += 1
                     else:
                         CountInFalse[word] += 1
-                    vocabulary.index(word)
                 except:
-                    # Don't use the word if it's going to be in the test data
-                    if(lineno % 4) != 0:
-                        if lineList[4].strip('\n') == 'TRUE':
-                            CountInTrue[word] = 1
-                        else:
-                            CountInFalse[word] = 1
-                        vocabulary.append(word)                  
+                    if lineList[4].strip('\n') == 'TRUE':
+                        CountInTrue[word] = 1
+                    else:
+                        CountInFalse[word] = 1
+          
          
             
-            #Fill the numerical array with values
-            for word in sentence:
-                try:
-                    numericalArray[lineno][vocabulary.index(word)] = sentence.count(word)
-                except:
-                    continue
+
 
             if lineList[4].strip('\n') == 'TRUE':
-                #numericalArray[lineno][0] = 1
-                labels.append(1)
-                # Update naive bayes statistics for train set only
-                if(lineno % 4) != 0:
-                    NrOfWordsTrue += len(sentence)
-                    NrOfTrue += 1
+                NrOfWordsTrue += len(sentence)
+                NrOfTrue += 1
             else:
-                #numericalArray[lineno][0] = 0
-                labels.append(-1)
                 NrOfFalse += 1
-                if(lineno % 4) != 0:
-                    NrOfWordsFalse += len(sentence)
-                    NrOfFalse += 1    
+                NrOfWordsFalse += len(sentence)
+                NrOfFalse += 1    
             
             lineno += 1   
+    
 
-    print "\nVocabulary length: "
-    print len(vocabulary)
-    
-    print "\np(T) = "
-    print NrOfTrue/(NrOfTrue+NrOfFalse)
-    
-    print "\np(comput|True) = "
-    print CountInTrue['comput']/NrOfWordsTrue
-    
-    for i in range (len(numericalArray)):
-        del numericalArray[i][len(vocabulary):14632]
-        
-    # Save vocabulary to file
-    pickle.dump(vocabulary, voc)
-    voc.close()
-
-    
-    #print_to_file(numericalArray,labels)
-    print "\nThe matlab_data files are not updated!\n"
 
     # Calculate probabilities for test example
-    data.seek(0)
     lineno = 0
-    nrOfTest = 0
+    NrOfTest = 0
     NrOfErrors = 0.0
-    for line in data:
-        if(lineno < nrOfLines and (lineno % 4) == 0):
-            lineList = line.split('\t')                       
-            sentence = lineList[3].split()
-            
-            pTrue = 1.0
-            pFalse = 1.0
-            
-            for word in sentence:
-                # Ugly hack, need smoothing, if the word is never seen just multiply by 1
-                try:                    
-                    pTrue *= CountInTrue[word]/NrOfWordsTrue
-                    pFalse *= CountInFalse[word]/NrOfWordsFalse
-                except:
-                    pTrue *= 1
-                    pFalse *= 1
-            
-            pTrue *= NrOfTrue/(NrOfTrue+NrOfFalse)
-            pFalse *= NrOfFalse/(NrOfTrue+NrOfFalse)
-            
-                        
-            if(pTrue > pFalse):
-                if(lineList[4].strip('\n') != 'TRUE'):
-                    print NrOfErrors
-                    print "ERROR PREDICTED TRUE"
-                    print line
-            else:
-                if(lineList[4].strip('\n') != 'FALSE'):
-                    NrOfErrors += 1
-                    print "ERROR PREDICTED FALSE"
-                    print line
-            nrOfTest += 1
-        lineno += 1
     
+    FalsePos = 0.0
+    FalseNeg = 0.0
+    TruePos = 0.0
+    TrueNeg = 0.0
+
+    
+    for line in test:        
+        lineList = line.split('\t')                       
+        sentence = lineList[3].split()
+        
+        pTrue = 1.0
+        pFalse = 1.0
+        
+        for word in sentence:
+            # If the word exist in both dictionary just use the counts
+            if word in CountInTrue and word in CountInFalse:
+                pTrue *= CountInTrue[word]/NrOfWordsTrue
+                pFalse *= CountInFalse[word]/NrOfWordsFalse
+            # If it appears in only one make it more likely that it belongs
+            # to that class
+            elif word in CountInTrue:
+                pTrue *= 1.0
+                pFalse *= 0.7
+            elif word in CountInFalse:
+                pTrue *= 0.7
+                pFalse *= 1.0
+            # If it doesn't belong to any just ignore it    
+            else:
+                pTrue *= 1.0
+                pFalse *= 1.0
+
+        pTrue *= NrOfTrue/(NrOfTrue+NrOfFalse)
+        pFalse *= NrOfFalse/(NrOfTrue+NrOfFalse)
+
+        #print pTrue - pFalse
+        
+        
+        if(pTrue > pFalse):
+            #print "l"
+            if(lineList[4].strip('\n') != 'TRUE'):
+                NrOfErrors += 1
+                FalsePos += 1
+                #print "ERROR PREDICTED TRUE"
+                #print line
+            else:
+                TruePos += 1
+        else:
+            #print "-1"
+            if(lineList[4].strip('\n') != 'FALSE'):
+                NrOfErrors += 1
+                FalseNeg += 1
+                #print "ERROR PREDICTED FALSE"
+                #print line
+            else:
+                TrueNeg += 1
+        NrOfTest += 1
+        lineno += 1
+        #print "-->"
+        
     print NrOfErrors
     print "-"
-    print nrOfTest  
-    print "Accuracy"
-    print 1-NrOfErrors/nrOfTest
+    print NrOfTest  
+    print "\nAccuracy"
+    print 1-NrOfErrors/NrOfTest
+    print "\nRecall"
+    print TruePos/(TruePos+FalseNeg)
+    print "\nPrecision"
+    print TruePos/(TruePos+FalsePos)
+    print "\nConf Matrix"
+    print str(TruePos/(TruePos+FalsePos)) + " " + str(FalsePos/(TruePos+FalsePos))
+    print str(FalseNeg/(FalseNeg+TrueNeg)) + " " + str(TrueNeg/(FalseNeg+TrueNeg))
 
 if __name__ == "__main__":   
     try:

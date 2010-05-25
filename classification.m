@@ -4,10 +4,15 @@
 % Run python script in linux
 system(sprintf('python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"'))
 
-%%
+%% WINDOWS
 addpath ..\code\Libsvm\
 addpath ..\code\KNN\
 addpath ..\code
+
+%% LINUX
+addpath 'Libsvm'    
+addpath 'KNN'
+% addpath 'code'
 %%
 fprintf('\n                LOADING DATA\n')
 
@@ -107,10 +112,53 @@ else if CLASSIFIER==2
     end
 end
 
-% Computer the percentage of correct positive and negative classification
+% Compute the percentage of correct positive and correct negative
+% classified
 pos=sum(predict_label(test_labels==1)==1)/sum(test_labels==1) 
 neg=sum(predict_label(test_labels==-1)==-1)/sum(test_labels==-1)
 
+%
+dec_values = - dec_values;
+
+[rec,prec,ap] = prec_rec(dec_values, test_labels, 1);
+
+
+
+%% 
+% for i=1:size(output,1)
+%         if output(i)<0
+%             output2(i)=-1;
+%         else
+%             output2(i)=1;
+%         end
+% end
+% output2 = output2';
+% pos=sum(output2(gt==1)==1)/sum(gt==1) 
+% neg=sum(output2(gt==-1)==-1)/sum(gt==-1)
+% [rec,prec,ap] = prec_rec(output, gt, 1);
+% 
+% 
+% train = horzcat(train_data, train_labels);
+% test = horzcat(test_data, test_labels);
+% for i=1:size(train,1)
+%         if train(i,size(train,2))==-1
+%             train(i,size(train,2))=2;
+%         end
+% end
+% 
+% for i=1:size(test,1)
+%         if test(i,size(test,2))==-1
+%             test(i,size(test,2))=2;
+%         end
+% end
+% 
+% [predict, accuracy] = Naive_Bayes(train, test)
+
+% [AA,BB]=sort(dec_values, 'descend');
+% gt=test_labels(BB);
+% score=AA;
+% prec_rec(dec_values, test_labels);
+%[prec, tpr, fpr, thresh] = prec_rec(dec_values, test_labels, 'plotPR', 1);
 
 % RESULTS with stemmed data (beforehand), stemmed url, del short words, del
 % symbols # nr of terms in the voc: 8741

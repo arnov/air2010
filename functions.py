@@ -1,25 +1,26 @@
 from stemmer import PorterStemmer
 
+<<<<<<< .mine
+def print_to_file(numericalArray, labels,train_data_loc, train_labels_loc):
+    # Create files to save the output
+    train_data = open(train_data_loc, 'w')    
+    train_labels = open(train_labels_loc, 'w')
+
+=======
 def print_to_file(numericalArray, labels):
     # Create file to save the output
     train_data = open('matlab_data/train_data_tf.csv', 'w')    
     train_labels = open('matlab_data/train_labels.csv', 'w')
     test_data = open('matlab_data/test_data_tf.csv', 'w')
     test_labels = open('matlab_data/test_labels.csv', 'w')
+>>>>>>> .r23
     
     # Print all the numerical data to the file
-    for i in range(len(numericalArray)):
-  
-        if (i % 4) == 0:
-            test_data.write(str(numericalArray[i]).strip('[]'))
-            test_data.write('\n')
-            test_labels.write(str(labels[i]).strip('[]'))
-            test_labels.write('\n')
-        else:
-            train_data.write(str(numericalArray[i]).strip('[]'))
-            train_data.write('\n')
-            train_labels.write(str(labels[i]).strip('[]'))
-            train_labels.write('\n')
+    for i in range(len(numericalArray)):  
+        train_data.write(str(numericalArray[i]).strip('[]'))
+        train_data.write('\n')
+        train_labels.write(str(labels[i]).strip('[]'))
+        train_labels.write('\n')
 
                 
         #labelsMatlab.write(labels[lineno])
@@ -55,13 +56,23 @@ def parse_url(sentence):
         sentence.append(word)
         
     return sentence
-
+    
 def remove_strange_symbols(sentence):
     # Remove strange symbols at the beggining and at the end of the terms
     for i in range(len(sentence)):
         sentence[i] = sentence[i].strip('.,:;&%()[]{}=+-*/\!|?~@#$\'')
-        sentence[i] = sentence[i].lower()
+    # Separate words that are seen as one term because istead of being separated by a space they are separated by a symbol
+    symbols = ('.', '/', '-', '_', '\\')
+    for symb in range(len(symbols)):
+	    for i in range(len(sentence)):
+		temp = sentence[i].split(symbols[symb])
+		if (len(temp) > 1):
+			sentence.remove(sentence[i])
+		for j in range(len(temp)):
+			if (temp[j] != ''):
+				sentence.append(temp[j]) 
     return sentence
+   
     
 def remove_short_words(sentence,length):
     temp_list = []
@@ -101,6 +112,6 @@ def print_settings(stem, stopword,short,url,symbols):
     else:
         print "-URLs are used as they are in the data"
     if(symbols == "remove_symbols"):
-        print "-Symbols ( @$%@#!$ )are removed"
+        print "-Symbols ( @$%@#!$ ) are removed"
     else:
         print "-Symbols are not removed"
