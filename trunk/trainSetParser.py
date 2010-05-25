@@ -40,49 +40,52 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
     for line in data:
         if(lineno < nrOfLines):
 
-            lineList = line.split('\t')           
+            lineList = line.split('\t')       
 
-            # Separate the sentence by spaces and add all words to the vocabulary
-            sentence = lineList[3].split()
+            # Ignore empty lines
+            if(len(lineList) > 2):
 
-            if(url == "stem_url"):
-                sentence = parse_url(sentence)
+                # Separate the sentence by spaces and add all words to the vocabulary
+                sentence = lineList[3].split()
 
-            if(symbols == "remove_symbols"):
-                sentence = remove_strange_symbols(sentence)
+                if(url == "stem_url"):
+                    sentence = parse_url(sentence)
 
-            if(short == "remove_short"):
-                sentence = remove_short_words(sentence,2)
+                if(symbols == "remove_symbols"):
+                    sentence = remove_strange_symbols(sentence)
 
-            if(stopword == "remove_stopword"):
-                sentence = remove_stopwords(sentence)  
+                if(short == "remove_short"):
+                    sentence = remove_short_words(sentence,2)
 
-            if(stem == "stem"):                
-                sentence = stem_word(sentence)                         
+                if(stopword == "remove_stopword"):
+                    sentence = remove_stopwords(sentence)  
 
-            # For every word add it to the vocabulary if it's not in there yet with document
-            # frequency 1. If it is already in the and it's the first time in this document
-            # it is encountered, add the document frequency
-            for word in sentence:
-                try:
-                    vocabulary.index(word)
-                except:
-                    vocabulary.append(word)                  
-         
-            
-            #Fill the numerical array with values
-            for word in sentence:
-                try:
-                    numericalArray[lineno][vocabulary.index(word)] = sentence.count(word)
-                except:
-                    continue
+                if(stem == "stem"):                
+                    sentence = stem_word(sentence)                         
 
-            if lineList[4].strip('\n') == 'TRUE':
-                labels.append(1)
-            else:
-                labels.append(-1)
+                # For every word add it to the vocabulary if it's not in there yet with document
+                # frequency 1. If it is already in the and it's the first time in this document
+                # it is encountered, add the document frequency
+                for word in sentence:
+                    try:
+                        vocabulary.index(word)
+                    except:
+                        vocabulary.append(word)                  
+             
                 
-            lineno += 1
+                #Fill the numerical array with values
+                for word in sentence:
+                    try:
+                        numericalArray[lineno][vocabulary.index(word)] = sentence.count(word)
+                    except:
+                        continue
+
+                if lineList[4].strip('\n') == 'TRUE':
+                    labels.append(1)
+                else:
+                    labels.append(-1)
+                    
+                lineno += 1
 
     print "\nVocabulary length: "
     print len(vocabulary)
