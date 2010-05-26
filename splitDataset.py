@@ -6,7 +6,12 @@ def split(testSet):
     # 3 -> 1,5,9 go in test
         
     # Open the datafile
-    data = open('data/data_Weps3_Task2_Trial.txt','r')
+    if(testSet != 99):
+        data = open('data/data_Weps3_Task2_Trial.txt','r')
+        splitFactor = 4
+    else:
+        data = open('data/new_data.txt','r')
+        splitFactor = 9
 
     tempset = open('data/dataset.txt', 'w')
     # Create file to save the train set
@@ -27,12 +32,10 @@ def split(testSet):
 
     
     for i in range(len(datasetList)):
-        if((i+testSet) % 4) != 0:
-            train.write(datasetList[i])		
+        if((i+testSet) % splitFactor) != 0:
+            train.write(datasetList[i])         
         else:
             test.write(datasetList[i])
-    train.write('\n')
     
 if __name__ == "__main__":  
     split(0)
-
