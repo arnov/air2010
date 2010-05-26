@@ -1,13 +1,13 @@
-% Run python script in windows
-[s,Python_output] = dos('C:\Python26\python.exe parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"')
-%%
-% Run python script in linux
-system(sprintf('python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"'))
-
-%% WINDOWS
-addpath ..\code\Libsvm\
-addpath ..\code\KNN\
-addpath ..\code
+% % Run python script in windows
+% [s,Python_output] = dos('C:\Python26\python.exe parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"')
+% %%
+% % Run python script in linux
+% system(sprintf('python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"'))
+% 
+% %% WINDOWS
+% addpath ..\code\Libsvm\
+% addpath ..\code\KNN\
+% addpath ..\code
 
 %% LINUX
 addpath 'Libsvm'    
@@ -16,10 +16,11 @@ addpath 'KNN'
 %%
 fprintf('\n                LOADING DATA\n')
 
-load('../matlab_data/train_data_tf.csv')
-load('../matlab_data/test_data_tf.csv')
-load('../matlab_data/train_labels.csv')
-load('../matlab_data/test_labels.csv')
+load('../matlab_data/dataset_O1/train_data_tf.csv')
+load('../matlab_data/dataset_O1/test_data_tf.csv')
+load('../matlab_data/dataset_O1/train_labels.csv')
+load('../matlab_data/dataset_O1/test_labels.csv')
+
 
 %%
 % Here we can select with type of weighting we want use:
@@ -96,35 +97,58 @@ end % end general w if
 %%
 
 fprintf('\n                CLASSIFING\n')
+% CLASSIFIER = 1;
+% clear scores;
+% clear predict_label
 
 if CLASSIFIER==1
     % CLASSIFICATION WITH KNN
-    predict_label = cvKnn(test_data', train_data', train_labels',2);
+    predict_labels = cvKnn(test_data', train_data', train_labels',2);
+    scores = predict_labels;
 
 else if CLASSIFIER==2
     
     % CLASSIFICATION WITH LIBSVM
-    cc=100;
-    options=sprintf('-t 0 -w1 10 -w2 1 -c %f',cc);
+    cc=0.5;
+    options=sprintf('-t 0 -w1 1 -w2 1 -c %f',cc);
     model=svmtrain(train_labels,train_data,options);
 
-    [predict_label, accuracy , dec_values] = svmpredict(test_labels,test_data, model); 
+    [predict_label, accuracy , scores] = svmpredict(test_labels,test_data, model); 
     end
 end
 
 % Compute the percentage of correct positive and correct negative
 % classified
-pos=sum(predict_label(test_labels==1)==1)/sum(test_labels==1) 
-neg=sum(predict_label(test_labels==-1)==-1)/sum(test_labels==-1)
+pos=sum(predict_label(test_labels==1)==1)/sum(test_labels==1); 
+neg=sum(predict_label(test_labels==-1)==-1)/sum(test_labels==-1);
 
 %
-dec_values = - dec_values;
+scores = - scores;
 
-[rec,prec,ap] = prec_rec(dec_values, test_labels, 1);
+[prec,rec,fmeasure] = prec_rec(scores, test_labels, 1);
 
+fprintf('\nPOS: %f, fNEG: %f, PRECISION: %f,  RECALL: %f, F-MEASURE: %f\n', pos, neg, prec, rec, fmeasure);
 
 
 %% 
+
+
+% r = 1;
+% t = 1;
+% 
+% for i=1:size(train_data_tf,1)
+%     if mod(i,4)==0
+%             test(t,:) = train_data_tf(i,:);
+%             test_label(t,:) = train_labels(i,:);
+%             t = t+1;
+%             fprinf('Row: %f',i);
+%     else
+%             train(r,:) = train_data_tf(i,:);
+%             train_label(r,:) = train_labels(i,:);
+%             r = r+1;
+%     end
+% end
+
 % for i=1:size(output,1)
 %         if output(i)<0
 %             output2(i)=-1;
