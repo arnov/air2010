@@ -24,7 +24,7 @@ def voc_test(test_loc, test_data_loc, test_labels_loc, stem, stopword,short, url
     
     # Initialize the numerical array with zeros, rows is equal to the length of the dataset
     # number of columns is equal to the lenghth of the vocabulary + some extra for labels 
-    numericalArray = [[0]*14632 for i in range(nrOfLines)]
+    numericalArray = [[0]*(len(vocabulary)+1) for i in range(nrOfLines)]
     labels = []
 
  
@@ -66,10 +66,8 @@ def voc_test(test_loc, test_data_loc, test_labels_loc, stem, stopword,short, url
             else:
                 labels.append(-1)
                 
-            lineno += 1
-    
-    for i in range (len(numericalArray)):
-        del numericalArray[i][len(vocabulary):14632]
+            lineno += 1            
+
         
     # Print it to file
     for i in range(len(numericalArray)):

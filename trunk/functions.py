@@ -3,10 +3,10 @@ from stemmer import PorterStemmer
 def print_to_file(numericalArray, labels,train_data_loc, train_labels_loc):
     # Create files to save the output
     train_data = open(train_data_loc, 'w')    
-    train_labels = open(train_labels_loc, 'w')
-    
+    train_labels = open(train_labels_loc, 'w')    
+
     # Print all the numerical data to the file
-    for i in range(len(numericalArray)):  
+    for i in range(len(numericalArray)):
         train_data.write(str(numericalArray[i]).strip('[]'))
         train_data.write('\n')
         train_labels.write(str(labels[i]).strip('[]'))
@@ -15,12 +15,12 @@ def print_to_file(numericalArray, labels,train_data_loc, train_labels_loc):
                 
         #labelsMatlab.write(labels[lineno])
         #dataMatlab.write('\n')
-        
+                
 def stem_word(sentence):
     for i in range(len(sentence)):
         p = PorterStemmer()
-        sentence[i] = sentence[i].lower()
-        sentence[i] = p.stem(sentence[i], 0,len(sentence[i])-1)        
+        #sentence[i] = sentence[i].lower()
+        sentence[i] = p.stem(sentence[i], 0,len(sentence[i])-1)
     return sentence
 
 
@@ -47,20 +47,24 @@ def parse_url(sentence):
         
     return sentence
     
-def remove_strange_symbols(sentence):
+def remove_strange_symbols(sentence):    
     # Remove strange symbols at the beggining and at the end of the terms
     for i in range(len(sentence)):
         sentence[i] = sentence[i].strip('.,:;&%()[]{}=+-*/\!|?~@#$\'')
     # Separate words that are seen as one term because istead of being separated by a space they are separated by a symbol
+    '''
     symbols = ('.', '/', '-', '_', '\\')
     for symb in range(len(symbols)):
-	    for i in range(len(sentence)):
-		temp = sentence[i].split(symbols[symb])
-		if (len(temp) > 1):
-			sentence.remove(sentence[i])
-		for j in range(len(temp)):
-			if (temp[j] != ''):
-				sentence.append(temp[j]) 
+        rm = 0
+        for i in range(len(sentence)):    
+            temp = sentence[(i-rm)].split(symbols[symb])
+            if (len(temp) > 1):
+                sentence.remove(sentence[(i-rm)])
+                rm = rm +1;
+                for j in range(len(temp)):
+                    if (temp[j] != ''):
+                        sentence.append(temp[j]) 
+    '''
     return sentence
    
     

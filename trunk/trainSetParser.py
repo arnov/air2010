@@ -30,7 +30,7 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
     voc = open('voc.pickle','wb')
     # Initialize the numerical array with zeros, rows is equal to the length of the dataset
     # number of columns is equal to the lenghth of the vocabulary + some extra for labels 
-    numericalArray = [[0]*14632 for i in range(nrOfLines)]
+    numericalArray = [[0]*1 for i in range(nrOfLines)]
     labels = []
 
 
@@ -63,6 +63,7 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
                 if(stem == "stem"):                
                     sentence = stem_word(sentence)                         
 
+                
                 # For every word add it to the vocabulary if it's not in there yet with document
                 # frequency 1. If it is already in the and it's the first time in this document
                 # it is encountered, add the document frequency
@@ -70,7 +71,9 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
                     try:
                         vocabulary.index(word)
                     except:
-                        vocabulary.append(word)                  
+                        vocabulary.append(word)
+                        for i in range (len(numericalArray)):
+                            numericalArray[i].append(0)
              
                 
                 #Fill the numerical array with values
@@ -86,12 +89,10 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
                     labels.append(-1)
                     
                 lineno += 1
+                print lineno
 
     print "\nVocabulary length: "
-    print len(vocabulary)
-    
-    for i in range (len(numericalArray)):
-        del numericalArray[i][len(vocabulary):14632]
+    print len(vocabulary)   
         
     # Save vocabulary to file
     pickle.dump(vocabulary, voc)

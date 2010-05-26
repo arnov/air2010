@@ -57,11 +57,9 @@ def main(stem, stopword,short,url,symbols):
 
                 if(stopword == "remove_stopword"):
                     sentence = remove_stopwords(sentence)  
-
+                    
                 if(stem == "stem"):                
-                    sentence = stem_word(sentence)
-
-                 
+                    sentence = stem_word(sentence)                 
 
                 # For every word if it's in a positive example add it
                 # to the CountInTrue dict if it's false add it to the
@@ -161,20 +159,30 @@ def main(stem, stopword,short,url,symbols):
         NrOfTest += 1
         lineno += 1
 
-        
-
+    
+    r = TruePos/(TruePos+FalseNeg)
+    p = TruePos/(TruePos+FalsePos)
+    
+    
+    print NrOfWordsTrue + NrOfWordsFalse
+    print "\nF-measure"
+    print 2*p*r/(p+r)
     print "\nAccuracy"
     print 1-NrOfErrors/NrOfTest
     print "\nRecall"
-    print TruePos/(TruePos+FalseNeg)
+    print r
     print "\nPrecision"
-    print TruePos/(TruePos+FalsePos)
+    print p
     print "\nConf Matrix"
     print str(TruePos/(TruePos+FalsePos)) + " " + str(FalsePos/(TruePos+FalsePos))
     print str(FalseNeg/(FalseNeg+TrueNeg)) + " " + str(TrueNeg/(FalseNeg+TrueNeg))
+    print "\nConf Matrix exact numbers"
+    print str(TruePos) + " " + str(FalsePos)
+    print str(FalseNeg) + " " + str(TrueNeg)
 
 if __name__ == "__main__":   
     try:
         main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
     except:
+        print "No arguments so using standard settings"
         main("stem","remove_stopword","remove_short","stem_url","remove_symbols" )
