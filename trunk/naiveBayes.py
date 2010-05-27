@@ -98,8 +98,6 @@ def main(stem, stopword,short,url,symbols):
 
     # Calculate probabilities for test example
     lineno = 0
-    NrOfTest = 0
-    NrOfErrors = 0.0
     
     FalsePos = 0.0
     FalseNeg = 0.0
@@ -141,7 +139,6 @@ def main(stem, stopword,short,url,symbols):
         if(pTrue > pFalse):
             #print "l"
             if(lineList[4].strip('\n') != 'TRUE'):
-                NrOfErrors += 1
                 FalsePos += 1
                 #print "ERROR PREDICTED TRUE"
                 #print line
@@ -150,13 +147,11 @@ def main(stem, stopword,short,url,symbols):
         else:
             #print "-1"
             if(lineList[4].strip('\n') != 'FALSE'):
-                NrOfErrors += 1
                 FalseNeg += 1
                 #print "ERROR PREDICTED FALSE"
                 #print line
             else:
-                TrueNeg += 1
-        NrOfTest += 1
+                TrueNeg += 1       
         lineno += 1
 
     
@@ -168,7 +163,7 @@ def main(stem, stopword,short,url,symbols):
     print "\nF-measure"
     print 2*p*r/(p+r)
     print "\nAccuracy"
-    print 1-NrOfErrors/NrOfTest
+    print (TruePos+TrueNeg)/(TruePos+TrueNeg+FalseNeg+FalsePos)
     print "\nRecall"
     print r
     print "\nPrecision"

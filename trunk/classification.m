@@ -4,10 +4,9 @@
 % % Run python script in linux
 % system(sprintf('python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"'))
 % 
-% %% WINDOWS
-% addpath ..\code\Libsvm\
-% addpath ..\code\KNN\
-% addpath ..\code
+%% WINDOWS
+addpath Libsvm\
+addpath KNN\
 
 %% LINUX
 addpath 'Libsvm'    
@@ -16,10 +15,10 @@ addpath 'KNN'
 %%
 fprintf('\n                LOADING DATA\n')
 
-load('../matlab_data/dataset_O1/train_data_tf.csv')
-load('../matlab_data/dataset_O1/test_data_tf.csv')
-load('../matlab_data/dataset_O1/train_labels.csv')
-load('../matlab_data/dataset_O1/test_labels.csv')
+load('matlab_data/dataset_1/train_data_tf.csv')
+load('matlab_data/dataset_1/test_data_tf.csv')
+load('matlab_data/dataset_1/train_labels.csv')
+load('matlab_data/dataset_1/test_labels.csv')
 
 
 %%
