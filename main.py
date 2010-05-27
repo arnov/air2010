@@ -28,4 +28,4 @@ def main(stem, stopword,short,url,symbols):
     voc_test(test_loc, test_data_loc, test_labels_loc, stem, stopword, short, url, symbols);
     
 if __name__ == "__main__":   
-    main("stem-","remove_stopword-","remove_short-","stem_url-","remove_symbols-")
+    main("stem","remove_stopword","remove_short","stem_url","remove_symbols")
