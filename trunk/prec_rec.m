@@ -1,3 +1,15 @@
+% AUTHORS:      Modolo Davide & Veenstra Arno
+% DATE:         28 May 2010
+
+% DESCRIPTION:  The function is used to compute precision, recall, F-Measure
+%               and to draw a precision/recall curve
+
+% INPUT DATA:   [scores]: It is a vector containing a score for every
+%                         example in the test set
+%               [gt]:     It is a vector with the groud truth of the test set
+%               [draw]:   If draw = 1 the P/R curve is going to be drawn,
+%                         not otherwise
+
 function [precision,recall,Fmeasure] = prec_rec(scores, gt, draw)
 
 

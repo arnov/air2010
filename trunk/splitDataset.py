@@ -1,3 +1,17 @@
+# AUTHORS:      Modolo Davide & Veenstra Arno
+# DATE:         28 May 2010
+
+# DESCRIPTION: As the test dataset has not been released yet,
+# the train dataset is going to be splitted in two parts: train and test sets. 
+
+# The function accepts one parameter as input:
+# [testSet]:    This paramenter can take the following values: 
+# 	 	0, 1, 2, 3 and 99 (if a 4 is insert it will work as a 0, a 5 as a 1, and so on...)
+# 		Values 0, 1, 2 and 3 split the trial train set: "data_Weps3_Task2_Trial.txt" file 
+#		in four differnt train and test sets
+#		Value 99 split the new train set: "weps-3_task-2_training.tsv" released few days ago in train and test set. 
+
+
 def split(testSet):    
     # Use this parametes to decide which line are used in test
     # 0 -> line 0,4,8,12 go in test
@@ -10,8 +24,8 @@ def split(testSet):
         data = open('data/data_Weps3_Task2_Trial.txt','r')
         splitFactor = 4
     else:
-        data = open('data/new_data.txt','r')
-        splitFactor = 9
+        data = open('data/weps-3_task-2_training.tsv','r')
+        splitFactor = 10
 
     tempset = open('data/dataset.txt', 'w')
     # Create file to save the train set
