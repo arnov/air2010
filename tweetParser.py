@@ -1,3 +1,11 @@
+# AUTHORS:      Modolo Davide & Veenstra Arno
+# DATE:         28 May 2010
+
+# DESCRIPTION: As the data set released was too small, we needed some extra negative example 
+# (especially for the SVM) and for this reason we harvested new tweets from the web. This function 
+# is used to control that these tweets are not containing any ambiguos company name and do not refer to them. 
+# If they don't, we add them in the proper form in the train data and the label them as NEGATIVE (false).
+
 def main():
         
 

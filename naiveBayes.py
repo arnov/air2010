@@ -1,10 +1,31 @@
+# AUTHORS:      Modolo Davide & Veenstra Arno
+# DATE:         28 May 2010
+
+# DESCRIPTION: This function calculates all the probabilities needed for Naive Bayes classification from train.txt. 
+# After that a prediction is made for all the examples in test.txt. A list of different result measure is printed.
+
+# PARAMETERS: Call this function as python naiveBayes.py 
+# The different feature enhancement functions can be turned on or of by adding or removing a dash after
+# them, so for instance stem = "stem" will use stemming, stem = "stem-" will skip stemming. The settings are printed
+# as the function begins so you can check if it's doing what is expected.
+
+
 import sys 
 from functions import *
 import pickle
 
 
 
-def main(stem, stopword,short,url,symbols):
+def main():
+    # Use: "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols" to use everything
+    # use a different string to skip somehint e.g. "stem-"
+    stem = "stem"
+    stopword = "remove_stopword"
+    short = "remove_short"
+    url = "stem_url-"
+    symbols = "remove_symbols"
+
+
     print_settings(stem, stopword,short,url,symbols)
         
     # Open the datafiles
@@ -98,6 +119,8 @@ def main(stem, stopword,short,url,symbols):
 
     # Calculate probabilities for test example
     lineno = 0
+    NrOfTest = 0
+    NrOfErrors = 0.0
     
     FalsePos = 0.0
     FalseNeg = 0.0
@@ -133,12 +156,14 @@ def main(stem, stopword,short,url,symbols):
         pTrue *= NrOfTrue/(NrOfTrue+NrOfFalse)
         pFalse *= NrOfFalse/(NrOfTrue+NrOfFalse)
 
+        # Needed for PR curve
         #print pTrue - pFalse
         
         
         if(pTrue > pFalse):
             #print "l"
             if(lineList[4].strip('\n') != 'TRUE'):
+                NrOfErrors += 1
                 FalsePos += 1
                 #print "ERROR PREDICTED TRUE"
                 #print line
@@ -147,11 +172,13 @@ def main(stem, stopword,short,url,symbols):
         else:
             #print "-1"
             if(lineList[4].strip('\n') != 'FALSE'):
+                NrOfErrors += 1
                 FalseNeg += 1
                 #print "ERROR PREDICTED FALSE"
                 #print line
             else:
-                TrueNeg += 1       
+                TrueNeg += 1
+        NrOfTest += 1
         lineno += 1
 
     
@@ -163,21 +190,14 @@ def main(stem, stopword,short,url,symbols):
     print "\nF-measure"
     print 2*p*r/(p+r)
     print "\nAccuracy"
-    print (TruePos+TrueNeg)/(TruePos+TrueNeg+FalseNeg+FalsePos)
+    print 1-NrOfErrors/NrOfTest
     print "\nRecall"
     print r
     print "\nPrecision"
     print p
     print "\nConf Matrix"
-    print str(TruePos/(TruePos+FalsePos)) + " " + str(FalsePos/(TruePos+FalsePos))
-    print str(FalseNeg/(FalseNeg+TrueNeg)) + " " + str(TrueNeg/(FalseNeg+TrueNeg))
-    print "\nConf Matrix exact numbers"
     print str(TruePos) + " " + str(FalsePos)
     print str(FalseNeg) + " " + str(TrueNeg)
 
-if __name__ == "__main__":   
-    try:
-        main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
-    except:
-        print "No arguments so using standard settings"
-        main("stem","remove_stopword","remove_short","stem_url","remove_symbols" )
+if __name__ == "__main__":       
+    main()

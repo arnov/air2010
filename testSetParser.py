@@ -1,3 +1,13 @@
+# AUTHORS:      Modolo Davide & Veenstra Arno
+# DATE:         28 May 2010
+
+# DESCRIPTION: the function is used to represent the tweets in the test set as tf (assigning the weight to be 
+# equal to the number of occurrences of term t in the tweet/document d). 
+# First the test set and the vocabulary (created from the train set) are loaded.
+# Then, some text optimization methods could be applied depending on which of them have been selected in main.py
+# Finally tf is compute for all the documents and the results are stored in two files (the first containing the data 
+# represented as tf and the second one containing the ground truth of the set)
+
 from functions import *
 import pickle
 

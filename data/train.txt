@@ -1686,7 +1686,7 @@ hormiguero	95	9015758730	@hectorgneri Buen dÃ­a!!! Abrazo de oso hormiguero!!!
 hormiguero	96	9013073854	@promeme Ya alborotaste el hormiguero XDXDXDXDXD	FALSE
 hormiguero	98	9012185445	al motorizado que me acaba de chocar y ademÃ¡s se volteÃ³ pa' malandrearme le deseo que le de hemorroides y se siente en un hormiguero!	FALSE
 hormiguero	99	9011699599	@Ursulolita viernes en el hormiguero??SIII!! no me lo pienso perder... voy a intentar ir de publico... idearÃ© un plan para q me dejen! jaja	TRUE
-hormiguero	100	9011682458	google compra un oso hormiguero... en serioÂ¡	FALSEnone	1	1	@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer. :( You shoulda got David Carr of Third Day to do it. ;D	FALSE
+hormiguero	100	9011682458	google compra un oso hormiguero... en serioÂ¡	FALSEnone	1	1	@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer. :( You shoulda got David Carr of Third Day to do it. ;D	FALSEnone	1	1	@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer. :( You shoulda got David Carr of Third Day to do it. ;D	FALSEnone	1	1	@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer. :( You shoulda got David Carr of Third Day to do it. ;D	FALSE
 none	2	1	is upset that he can't update his Facebook by texting it... and might cry as a result :( School today also. Blah!	FALSE
 none	3	1	@Kenichan I dived many times for the ball. Managed to save 50% :( The rest go out of bounds	FALSE
 none	4	1	my whole body feels itchy and like its on fire :(	FALSE

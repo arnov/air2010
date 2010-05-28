@@ -1,22 +1,31 @@
+# AUTHORS:      Modolo Davide & Veenstra Arno
+# DATE:         28 May 2010
+
+# DESCRIPTION: the function is used to first create the vocabulary and then to represent the tweets in the 
+#train set as tf (assigning the weight to be equal to the number of occurrences of term t in the tweet/document d). 
+
+# It is initially possibile to increase the dimension of the train set adding some negative tweets that have been 
+# harvested from the web. Is has been controlled in the tweetParser.py that this tweets are not containing any ambiguos 
+# company name and do not refer to them. Therefor they can be used as negative example.
+# Then, some text optimization methods could be applied depending on which of them have been selected in main.py
+# Next, the vocabulary of the collection is going to be created
+# Finally tf is compute for all the documents and the results are stored in two files (the first containing the data 
+# represented as tf and the second one containing the ground truth of the set)
+
+
 from functions import *
 import pickle
 
-
-""" To use all stemming and word reducing function call as:
- python parser.py or, pass all settings explicitely:
- python parser.py "stem" "remove_stopword" "remove_short" "stem_url" "remove_symbols"
- To skip a function just use a different string e.g.:
- python parser.py "-" "remove_stopword" "remove_short" "stem_url" "remove_symbols"
- will use the non stemmed data, but does call the other function, remove_stopword etc. """
-
-def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short, url, symbols):   
+def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short, url, symbols, extra_t):   
         
     # Open the datafile
     data = open(train_loc,'a+')
-    extra_tweets = open('data/extra_tweets.txt','r')
-    
-    for line in extra_tweets:
-        data.write(line)
+
+    # some extra tweet could be added to the train set as negative example:
+    if (extra_t == 1):
+	    extra_tweets = open('data/extra_tweets.txt','r')
+	    for line in extra_tweets:
+        	data.write(line)
     data.seek(0)
         
         
@@ -89,7 +98,6 @@ def voc_train(train_loc, train_data_loc, train_labels_loc, stem, stopword,short,
                     labels.append(-1)
                     
                 lineno += 1
-                print lineno
 
     print "\nVocabulary length: "
     print len(vocabulary)   
